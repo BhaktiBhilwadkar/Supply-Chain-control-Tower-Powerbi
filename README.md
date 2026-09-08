@@ -1,182 +1,432 @@
-# 🚚 Supply Chain Control Tower — Power BI Report
+# 🚚 Supply Chain Control Tower | Power BI
 
-An end-to-end **Power BI** dashboard that turns raw supply chain, supplier, logistics, and warehouse data into a single control tower for tracking risk, cost, and delivery performance — and for tracing *why* disruptions are happening.
+### Transforming Supply Chain Data into Actionable Business Intelligence
 
-The report follows a deliberate analytical narrative across seven pages:
+An interactive **Supply Chain Control Tower** built in Power BI to monitor **supplier risk, logistics performance, delivery exposure, warehouse & inventory indicators, and operational risk drivers**.
 
-> **Performance overview → Risk identification → Root-cause investigation → Recommendations**
-
----
-
-## 📁 File
-
-| File | Description |
-|---|---|
-| `Supply_Chain_control_tower.pbix` | Power BI Desktop file — full data model, DAX measures, and report pages |
+The project transforms approximately **113K supply chain records** into an interactive management dashboard using **Power Query, DAX, Star Schema data modeling, KPI development, drill-through analysis, and business storytelling**.
 
 ---
 
-## 🧭 Navigation
+## 📊 Dashboard Preview
 
-Every page carries a **HOME** button (top-left action button) that returns to the *Executive Control Tower*, plus a page-navigator strip for jumping directly between sections. The intended reading order is:
-
-1. Executive Control Tower
-2. Supplier Risk Analysis
-3. Supplier Detail
-4. Logistics & Delivery
-5. Warehouse & Inventory
-6. Risk Investigation
-7. Business Insights & Recommendations
-
-All visuals are cross-filtered — clicking any bar, dot, or donut slice filters the rest of the page (and drives drill-through where configured).
+![Executive Control Tower](01_Executive_Control_Tower.png)
 
 ---
 
-## 🗃️ Data Model
+## 🎯 Business Problem
 
-| Table | Role |
-|---|---|
-| `Fact_SupplyChain` | Transaction-grain fact table — supplier, product, country, shipping cost, lead time, delay probability, risk classification, cargo/weather/customs conditions, order fulfillment status, inventory & demand fields |
-| `Dim_Country` | Dimension table that also hosts the report's **DAX measures** (all KPIs are defined here rather than in the fact table) |
+Supply chain operations involve multiple interconnected risks across suppliers, transportation, inventory, delivery, and operational conditions.
 
-### Key DAX measures (defined on `Dim_Country`)
+Without a centralized analytical solution, decision-makers may struggle to:
 
-| Measure | Used for |
-|---|---|
-| `Total Records` | Overall shipment/record volume |
-| `Total Shipping cost` / `Average Shipping cost` | Freight cost KPIs |
-| `Average Lead Time` | Delivery speed KPI |
-| `Average delay probability` | Core delay-risk KPI, reused across almost every page |
-| `Average risk score` | Composite risk KPI |
-| `High Risk %` / `High Risk Records` | Share and count of shipments classified as high risk |
-| `Average Supplier Relaibility` | Supplier scorecard KPI |
-| `Average Disruption Likelihood` | Predictive risk KPI |
-| `Average Route RisK` | Logistics-route risk KPI |
-| `Average Inventory Level` / `Total Historical demand` | Warehouse & inventory KPIs |
-| `Average Equipment Availability` / `Average Cargo Condotions` | Warehouse readiness KPIs |
+* Identify high-risk suppliers
+* Monitor delivery and delay exposure
+* Understand logistics cost variations
+* Evaluate inventory and warehouse conditions
+* Investigate potential risk drivers
+* Prioritize corrective actions
 
-> Note: several measure names retain the source spelling from the original dataset (e.g. *Relaibility*, *Condotions*, *RisK*) — kept as-is to match the model.
+### 💡 Solution
+
+This project provides a centralized **Supply Chain Control Tower** that brings these indicators together into one interactive analytical environment.
 
 ---
 
-## 📊 Page-by-Page Breakdown
+## 🚀 Project Objectives
 
-### 1. Executive Control Tower
-*Executive Performance • Risk • Logistics Intelligence*
-
-The landing page — a single-screen summary of the whole supply chain.
-
-- **KPI cards:** Total Records, Total Shipping Cost, Average Lead Time, Average Delay Probability, High Risk %
-- **Slicers:** Supplier Country, Risk Classification, Supplier ID — global filters for the page
-- **Donut chart:** Record volume by Risk Classification (share of Low/Medium/High risk)
-- **Clustered column chart:** Average Delay Probability by Risk Classification
-- **Clustered bar chart:** Average Supplier Reliability by Supplier ID
-- **Clustered bar chart:** Average Delay Probability by Supplier Country
-- **Clustered column chart:** Average Shipping Cost by Risk Classification
-
-**Purpose:** answer "how is the network performing right now, and where's the risk concentrated?" in one glance.
-
-### 2. Supplier Risk Analysis
-*Supplier reliability • Risk exposure • Operational performance*
-
-> Identify high-risk suppliers → Assess reliability → Prioritize supplier action
-
-- **KPI cards:** Average Supplier Reliability, High Risk %, High Risk Records
-- **Clustered bar chart:** Average Supplier Reliability by Supplier ID
-- **Scatter chart:** Supplier Reliability (X) vs. Delay Probability (Y), bubble size = Shipping Cost, colored by Risk Classification, per Supplier ID — a quadrant view for spotting unreliable-and-risky suppliers
-- **Column chart:** Record count by Supplier ID, split by Risk Classification
-- **Scatter chart:** Supplier Reliability (X) vs. Disruption Likelihood (Y), bubble size = Shipping Cost, per Supplier ID
-
-**Purpose:** rank and triage suppliers by combined reliability and risk signal.
-
-### 3. Supplier Detail
-*Deep-dive into supplier performance → Assess risk exposure → Identify corrective actions*
-
-A drill-down page (reached from Supplier Risk Analysis) focused on a single supplier or filtered cohort.
-
-- **KPI cards:** Average Delay Probability, Average Disruption Likelihood, Average Supplier Reliability, Average Shipping Cost, Average Lead Time
-- **Bar chart:** Record count by Risk Classification
-- **Scatter chart:** Shipping Cost (X) vs. Delay Probability (Y), colored by Risk Classification
-
-**Purpose:** support root-cause conversations with an individual supplier.
-
-### 4. Logistics & Delivery
-*Transportation cost • Lead time • Delivery risk*
-
-> Track transportation costs → Identify delivery delays → Optimize logistics performance
-
-- **KPI cards:** Average Shipping Cost, Average Lead Time, Total Shipping Cost, Average Delay Probability
-- **Bar chart:** Average Shipping Cost by Supplier Country
-- **Scatter chart:** Lead Time (X) vs. Delay Probability (Y), bubble size = Shipping Cost, per Supplier ID
-- **Clustered column chart:** Average Shipping Cost by Risk Classification
-- **Column chart:** Order Fulfillment Status (sum) by Risk Classification
-
-**Purpose:** connect logistics spend to delivery reliability and find where cost and risk diverge by country/lane.
-
-### 5. Warehouse & Inventory
-*Inventory levels • Equipment availability • Operational exposure*
-
-> Assess inventory health → evaluate warehouse readiness → identify operational gaps
-
-- **KPI cards:** Average Inventory Level, Total Historical Demand, Average Equipment Availability, Average Cargo Conditions
-- **Scatter chart:** Inventory Level (X) vs. Historical Demand (Y), bubble size = Shipping Cost, per Product ID — flags demand/inventory imbalance
-- **Clustered bar chart:** Average Equipment Availability by Supplier Country
-- **Clustered column chart:** Average Inventory Level by Risk Classification
-
-**Purpose:** check whether stock levels are aligned to demand and whether warehouse/equipment readiness varies by risk tier.
-
-### 6. Risk Investigation
-*Root-cause analysis • Disruption exposure • Delivery risk*
-
-> Trace risk drivers → Uncover root causes → Prioritize mitigation actions
-
-- **KPI cards:** Average Risk Score, Average Disruption Likelihood, Average Delay Probability, High Risk %
-- **Donut chart:** Record volume by Risk Classification
-- **Scatter chart:** Disruption Likelihood (X) vs. Delay Probability (Y), bubble size = Shipping Cost, per Product ID
-- **Clustered bar chart:** Average Route Risk by Risk Classification
-- **Scatter chart:** Weather Condition Severity (X) vs. Delay Probability (Y), colored by Risk Classification
-- **Scatter chart:** Cargo Condition Status (X) vs. Delay Probability (Y), colored by Risk Classification
-- **Scatter chart:** Customs Clearance Time (X) vs. Delay Probability (Y), colored by Risk Classification
-
-**Purpose:** stress-test the usual suspects (weather, cargo condition, customs) against delay probability to see which factors actually explain the risk.
-
-### 7. Business Insights & Recommendations
-*From supply chain signals → actionable business decisions*
-
-A narrative summary page (text-based, no charts) that closes the story with findings and a call to action:
-
-- **Overall risk exposure:** ~80% of records are classified High Risk, pointing to significant, network-wide exposure.
-- **Supplier risk analysis:** higher supplier risk correlates with *lower* delay probability, and vice versa — a non-linear, counter-intuitive relationship between supplier risk rating and actual delivery performance.
-- **Logistics optimization:** shipping costs vary materially by country and by risk tier, pointing to transportation optimization opportunities.
-- **Inventory planning:** inventory levels should be re-aligned to historical demand to reduce imbalance.
-- **Risk mitigation:** cargo condition, customs clearance time, and weather severity show limited variation across risk tiers — meaning they are **not** the primary drivers of the observed risk (a useful negative finding that redirects mitigation effort elsewhere).
-
-**Overall takeaway:** prioritize supplier risk management and operational monitoring over environmental/logistics factors, since the latter explain less of the variance in risk than expected.
-
-**Closing recommendation:**
-> *"Prioritize high-risk suppliers → Strengthen monitoring → Optimize logistics → Reduce disruption and delivery exposure."*
+* Monitor overall supply chain performance
+* Identify high-risk exposure
+* Evaluate supplier reliability
+* Analyze logistics costs and delivery performance
+* Assess inventory and warehouse indicators
+* Investigate disruption and delay risk
+* Compare performance across countries
+* Enable supplier-level drill-through analysis
+* Convert analytical findings into business recommendations
 
 ---
 
-## 🔎 Analytical Themes Across the Report
+# 🛠️ Tech Stack
 
-| Theme | Where it shows up |
-|---|---|
-| **Risk classification** (Low/Medium/High) | Used as the primary color/legend split on nearly every chart, tying every page back to one risk taxonomy |
-| **Delay probability** | The most reused single metric — appears on 8+ visuals across 5 pages as the common "outcome" variable |
-| **Supplier scorecarding** | Reliability vs. risk vs. cost bubble charts, first at cohort level (page 2) then drilled to individual supplier (page 3) |
-| **Cost vs. risk vs. performance trade-offs** | Recurrent scatter-plot pattern (X = driver, Y = delay probability, size = shipping cost) used to test multiple hypotheses (lead time, weather, cargo, customs) against delay outcomes |
-
----
-
-## 🛠️ How to Use / Extend
-
-1. Open `Supply_Chain_control_tower.pbix` in Power BI Desktop.
-2. Use the **Supplier Country**, **Risk Classification**, and **Supplier ID** slicers on the Executive page to filter the whole session (filters persist as you navigate via the page navigator).
-3. To point the model at your own data, use **Transform Data / Power Query** to repoint `Fact_SupplyChain`, then refresh — the DAX measures on `Dim_Country` will recalculate automatically as long as column names are preserved.
-4. To publish: **File → Publish → Power BI Service**, then set up a scheduled refresh if the source becomes a live connection.
+| Technology      | Application                           |
+| --------------- | ------------------------------------- |
+| **Power BI**    | Dashboard & interactive visualization |
+| **Power Query** | Data cleaning & transformation        |
+| **DAX**         | KPI & analytical calculations         |
+| **CSV / Excel** | Source data                           |
+| **Star Schema** | Data modeling                         |
+| **GitHub**      | Portfolio & project documentation     |
 
 ---
 
-GitHub cannot render `.pbix` files inline, so consider adding page screenshots (File → Export → Export report pages as images, or simple screen captures) to a `/screenshots` folder and embedding them above with `![Executive Control Tower](screenshots/executive.png)` for each of the seven pages.
-````
+# 🔄 End-to-End Analytics Workflow
+
+```text
+Raw Data
+   ↓
+Data Quality & Profiling
+   ↓
+Power Query
+   ↓
+Data Modeling
+   ↓
+Star Schema
+   ↓
+DAX Measures
+   ↓
+Interactive Dashboard
+   ↓
+Business Insights
+   ↓
+Recommendations
+```
+
+---
+
+# 🧹 Data Preparation
+
+The raw dataset was prepared and validated using **Power Query**.
+
+### Data Quality Results
+
+| Check                   | Result              |
+| ----------------------- | ------------------- |
+| Missing Values          | **0%**              |
+| Data Errors             | **0%**              |
+| Complete Duplicate Rows | **None Identified** |
+| Data Types              | **Validated**       |
+| Categorical Values      | **Reviewed**        |
+
+Repeated `product_id` values were retained appropriately because a product can appear across multiple supply chain records.
+
+---
+
+# 📐 Data Model
+
+The project follows a **Star Schema** designed for efficient analytical reporting.
+
+### Fact Table
+
+`Fact_SupplyChain`
+
+### Dimension Tables
+
+* `Dim_Product`
+* `Dim_Supplier`
+* `Dim_Country`
+
+### Model Structure
+
+```text
+                 Dim_Product
+                      │
+                      │ 1 : *
+                      ▼
+Dim_Supplier ───► Fact_SupplyChain ◄─── Dim_Country
+    1 : *                                  1 : *
+```
+
+### Relationship Design
+
+* **Cardinality:** One-to-Many
+* **Cross-filter:** Single direction
+* **Date Table:** Not required because the source dataset contains no date field
+
+---
+
+# 📈 DAX & KPI Development
+
+The dashboard contains **20 DAX measures** covering performance, risk, logistics, supplier, and operational indicators.
+
+### Core KPIs
+
+* Total Records
+* Total Shipping Cost
+* Average Lead Time
+* Average Risk Score
+* Average Delay Probability
+* Average Delivery Deviation
+* Average Disruption Likelihood
+* Total Historical Demand
+* Average Inventory Level
+* Average Equipment Availability
+
+### Risk Metrics
+
+* High-Risk Records
+* High-Risk %
+* Low-Risk Records
+* Moderate-Risk Records
+
+### Operational Metrics
+
+* Average Customs Clearance Time
+* Average Shipping Cost
+* Average Supplier Reliability
+* Average Route Risk
+* Average Weather Severity
+* Average Cargo Condition
+
+---
+
+# 📊 Dashboard Overview
+
+The report follows a structured management storyline:
+
+**Monitor → Identify → Analyze → Investigate → Act**
+
+---
+
+## 01 | Executive Control Tower
+
+![Executive Control Tower](01_Executive_Control_Tower.png)
+
+### Focus
+
+Management-level overview of supply chain performance and risk exposure.
+
+### Key Analysis
+
+* Overall KPIs
+* Risk distribution
+* Supplier reliability
+* Delay probability
+* Country-level delivery risk
+* Shipping cost by risk
+
+**Key Question:**
+*What is the current overall supply chain performance and risk position?*
+
+---
+
+## 02 | Supplier Risk Analysis
+
+![Supplier Risk Analysis](02_Supplier_Risk_Analysis.png)
+
+### Focus
+
+Supplier reliability, risk exposure, disruption likelihood, and delivery performance.
+
+### Key Analysis
+
+* Top supplier reliability
+* High-risk supplier exposure
+* Reliability vs delay risk
+* Supplier risk distribution
+* Reliability vs disruption risk
+
+**Key Question:**
+*Which suppliers require attention and how does supplier reliability relate to operational risk?*
+
+---
+
+## 03 | Logistics & Delivery
+
+![Logistics & Delivery](03_Logistics_Delivery.png)
+
+### Focus
+
+Transportation costs, lead times, delivery risk, and fulfillment performance.
+
+### Key Analysis
+
+* Shipping cost by country
+* Lead time vs delay probability
+* Shipping cost by risk level
+* Order fulfillment by risk
+
+**Key Question:**
+*Where are logistics costs and delivery risks concentrated?*
+
+---
+
+## 04 | Warehouse & Inventory
+
+![Warehouse & Inventory](04_Warehouse_Inventory.png)
+
+### Focus
+
+Inventory health, historical demand, warehouse readiness, and operational indicators.
+
+### Key Analysis
+
+* Inventory vs demand
+* Equipment availability by country
+* Inventory by risk level
+* Cargo condition
+
+**Key Question:**
+*Are warehouse and inventory indicators aligned with supply chain risk?*
+
+---
+
+## 05 | Risk Investigation
+
+![Risk Investigation](05_Risk_Investigation.png)
+
+### Focus
+
+Root-cause-oriented analysis of disruption and delivery risk.
+
+### Key Analysis
+
+* Risk classification
+* Disruption vs delay
+* Route risk
+* Weather severity vs delay
+* Cargo condition vs delay
+* Customs clearance vs delay
+
+**Key Question:**
+*What operational factors are associated with supply chain risk and delivery exposure?*
+
+---
+
+## 06 | Business Insights & Recommendations
+
+![Business Insights](06_Business_Insights.png)
+
+### Focus
+
+Management-level interpretation of the complete analysis.
+
+### Overall Business Takeaway
+
+The analysis highlights significant supply chain risk exposure, with supplier and operational risks requiring the greatest attention. While logistics costs and delivery performance vary across suppliers and countries, cargo condition, customs clearance, and weather show limited variation across risk levels.
+
+### Management Direction
+
+> **Prioritize high-risk suppliers → Strengthen monitoring → Optimize logistics → Reduce disruption and delivery exposure**
+
+---
+
+# 🔍 Key Business Insights
+
+### 🔴 Risk Exposure
+
+A significant proportion of records are classified as high risk, indicating the need for proactive supply chain risk management.
+
+### 👥 Supplier Risk
+
+Supplier risk does not necessarily translate directly into higher delay probability, highlighting the importance of evaluating supplier reliability and operational risk independently.
+
+### 🚚 Logistics
+
+Shipping costs vary across countries, while risk levels show differences in logistics cost and delivery performance, creating opportunities for transportation optimization.
+
+### 🏭 Warehouse & Operations
+
+Despite high overall risk exposure, cargo condition, customs clearance time, and weather severity show relatively limited variation across risk levels, suggesting they are not the primary drivers of the observed risk.
+
+---
+
+# 💼 Business Recommendations
+
+### 01 — Supplier Risk Management
+
+* Prioritize high-risk suppliers
+* Monitor supplier reliability continuously
+* Develop supplier-specific mitigation strategies
+* Review critical supplier dependencies
+
+### 02 — Logistics Optimization
+
+* Investigate high-cost countries and routes
+* Monitor delivery-risk concentration
+* Identify transportation cost optimization opportunities
+
+### 03 — Operational Monitoring
+
+* Track disruption likelihood and delay probability
+* Establish early-warning indicators
+* Strengthen risk-based operational monitoring
+
+### 04 — Inventory Management
+
+* Compare inventory against historical demand
+* Monitor warehouse equipment availability
+* Investigate inventory patterns associated with elevated risk
+
+---
+
+# ⚡ Interactive Features
+
+### 🎛️ Dynamic Filters
+
+Users can filter the dashboard using:
+
+* Supplier Country
+* Risk Classification
+* Supplier ID
+
+### 🔗 Cross-Filtering
+
+Selecting a supplier, country, or risk category dynamically updates connected KPIs and visuals.
+
+### 🔬 Supplier Drill-Through
+
+A dedicated **Supplier Detail** page enables deeper supplier-level investigation.
+
+### 🧭 Page Navigation
+
+Users can move through the complete analytical story:
+
+```text
+Executive Control Tower
+        ↓
+Supplier Risk Analysis
+        ↓
+Logistics & Delivery
+        ↓
+Warehouse & Inventory
+        ↓
+Risk Investigation
+        ↓
+Business Insights & Recommendations
+```
+
+---
+
+# 📁 Repository Contents
+
+```text
+supply-chain-control-tower-powerbi/
+│
+├── README.md
+├── Project_Documentation.md
+├── Supply_Chain_Control_Tower.pbix
+│
+├── 01_Executive_Control_Tower.png
+├── 02_Supplier_Risk_Analysis.png
+├── 03_Logistics_Delivery.png
+├── 04_Warehouse_Inventory.png
+├── 05_Risk_Investigation.png
+└── 06_Business_Insights.png
+```
+
+---
+
+# 🧠 Skills Demonstrated
+
+**Power BI** · **DAX** · **Power Query** · **Data Modeling** · **Star Schema** · **Data Cleaning** · **KPI Development** · **Risk Analytics** · **Supply Chain Analytics** · **Business Intelligence** · **Data Visualization** · **Dashboard Design** · **Business Storytelling** · **Interactive Reporting**
+
+---
+
+# ⭐ Project Outcome
+
+This project demonstrates an end-to-end **Data Analytics → Business Intelligence → Decision Support** workflow.
+
+The final solution enables stakeholders to:
+
+**Monitor → Identify → Investigate → Understand → Act**
+
+by providing a centralized view of supply chain performance, supplier risk, logistics efficiency, inventory indicators, and operational risk.
+
+---
+
+## 👩‍💻 Portfolio Project
+
+### **Supply Chain Control Tower — Power BI**
+
+A business-focused analytics project demonstrating practical expertise in **Power BI development, DAX, Power Query, data modeling, risk analysis, dashboard design, and business storytelling.**
